@@ -189,7 +189,7 @@ combined[["RCom_Regions", "RCom"]] = combined.apply(
 
 combined["Root"] = combined["Root"].fillna("")
 
-#compute rounded of frequencies for DFreq and MSAFreq
+#compute rounded log of frequencies for DFreq and MSAFreq
 def log_round(series):
     s = series.fillna(0)
     return s.apply(lambda x: int(round(np.log10(x))) if x > 0 else 0)
