@@ -1,0 +1,68 @@
+{
+  "files": {
+    "input": {
+      "madar_lexicon": "MADAR_Lexicon_v1.0.tsv",
+      "msa_freq": "MSA_freq_lists.tsv",
+      "da_freq": "DA_freq_lists.tsv",
+      "transliteration": "MADAR_Lexicon_transliteration.tsv",
+      "roots": "roots.tsv"
+    },
+    "intermediate": {
+      "frequencies": "BASMA Plan - frequencies.csv",
+      "scores": "BASMA Plan - Scores.csv",
+      "scoring_table": "BASMA Plan - Temp (1).csv"
+    },
+    "output": {
+      "easiness": "BASMA Easiness by Word.csv",
+      "targets": "BASMA IDs with E-M-H.csv",
+      "targets_all_long": "BASMA IDs with All E-M-H (long).csv",
+      "targets_all_triplets": "BASMA IDs with All E-M-H (long, triplets only).csv"
+    }
+  },
+  "mapping_thresholds": {
+    "dfreq": {
+      "low_max": 1,
+      "medium_max": 4,
+      "description": "DFreq rounded log: 0-1 => L, 2-4 => M, 5+ => H"
+    },
+    "dcom": {
+      "low_max": 1,
+      "medium_max": 3,
+      "description": "DCom pop count: 1 => L, 2-3 => M, 4+ => H"
+    },
+    "rcom": {
+      "low_max": 1,
+      "medium_max": 3,
+      "description": "RCom pop count: 1 => L, 2-3 => M, 4+ => H"
+    }
+  },
+  "category_thresholds": {
+    "easy_min": 1000,
+    "medium_min": 100,
+    "description": "EasinessScore thresholds: >= 1000 => Easy, >= 100 => Medium, < 100 => Hard"
+  },
+  "scoring_table": {
+    "header_row": 13,
+    "data_start_row": 14,
+    "columns": {
+      "asim": 3,
+      "fsim": 4,
+      "dfreq": 5,
+      "dcom": 6,
+      "rcom": 7,
+      "score": 8,
+      "category": 10
+    }
+  },
+  "frequencies_file": {
+    "columns": {
+      "english": 0,
+      "french": 1,
+      "msa": 2,
+      "pos": 3,
+      "coda": 6,
+      "rcom": 13
+    }
+  }
+}
+

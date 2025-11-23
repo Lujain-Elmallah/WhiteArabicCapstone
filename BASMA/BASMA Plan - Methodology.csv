@@ -1,0 +1,83 @@
+ ,,,,,,,,,,,,,,
+,"For each concept dialect word (MSA, EN, FR, Dialect), we will compute the following dimensions:",,,,,,,,,,,,,
+,,,,,,,,,,,,,,
+,,,,Values,,,,,,,,,,
+,1,ASim,MSA Similarity,"D = Different
+S = Same","Define ArabicSimilarity (MSA, DIA):
+(a) delete all diacritics from MSA and DIA
+(b) delete all ""weak letters"": ا و ي ى ة أ  آ إ ؤ ئ ء  from MSA and DIA
+(c) if the edit distance = 0, then S, else D",,,,,,,,Select Concepts,"(1) each dialect must have one Hard word; one medium and one easy (using Easiness Score)
+(2) all concepts should cover all the regions (six, to simplify)
+(3) aim to diversify cities in regions
+
+For each concept identify all the words that fall in Hard, Medium and Easy classes
+"
+,2,FSim,ENFR Similarity,"D = Different
+S = Same","(a) convert EN and FR to Arabic script (use ChatGPT -offline, once)
+(b) apply the ArabicSimilarity method as is and pick the smallest value of ArabicSimilarity (Arabized(EN), DIA), or ArabicSimilarity ((Arabized(FR), DIA)",,,,,,,,Select Targets,"One Hard, one Medium, one Easy"
+,3,DFreq,DIA Frequency,"L = Low
+M = Medium
+H = High","(a) Get the Rounded Log (RL) of the frequency of the DIA word 
+(b) map as follows:
+RL 0-1 => L
+RL 2-4 => M
+RL 5-8 => H",,,,,,,,Select Distractors,"Identify list of words that fit the following criteria:
+(a) Edit distance to Hard/Medium/Easy is NOT 0
+(b) Edit distance to target MSA or EN or FR is 1 characters (after stripping)
+(c) select three from H,M,L DCom
+(d) select three from H,M,L DFreq"
+,4,DCom(Dpop),DIA Commonality,"L = Low
+M = Medium
+H = High","(a) map the 25 cities to the following regions: 
+Morocco+Algeria (3)
+Tunisia+Libya (4)
+Egypt+Sudan (4)
+Syria, Lebanon, Jordan, Palestine (6)
+Iraq (3)
+Qatar+Saudi+Oman+Yemen (5)
+
+(b) count the number of regions above a word appears as is (Pop Count, PC)
+(c) map as follows:
+PC 1 => L
+PC 2-3 => M
+PC 4-6 => H",,,,,,,,,
+,,Compute Easiness Score (White Arabic Score?),,,,,,,,,,,,
+,,,Combinations,36 = 2 x 2 x 3 x 9,,,,,,,,,,
+,,,,,,,,,,,,,,
+,,,ASim,FSim,DFreq,DCom,Easiness Score,Easiness Score 1-36,,,Value,Ease Weight,,
+,,,S,S,H,H,1300,36,Easy,ASim,S,1000,,
+,,,S,S,M,H,1250,34,Easy,ASim,D,0,,
+,,,S,S,H,M,1250,34,Easy,FSim,S,100,,
+,,,S,S,L,H,1200,30,Easy,FSim,D,0,,
+,,,S,S,M,M,1200,30,Easy,DFreq,H,100,,
+,,,S,D,H,H,1200,30,Easy,DFreq,M,50,,
+,,,S,S,H,L,1200,30,Easy,DFreq,L,0,,
+,,,S,S,L,M,1150,26,Easy,DCom,H,100,,
+,,,S,D,M,H,1150,26,Easy,DCom,M,50,,
+,,,S,S,M,L,1150,26,Easy,DCom,L,0,,
+,,,S,D,H,M,1150,26,Easy,,,,,
+,,,S,D,L,H,1100,22,Easy,,,,,
+,,,S,S,L,L,1100,22,Easy,,,,,
+,,,S,D,M,M,1100,22,Easy,,,,,
+,,,S,D,H,L,1100,22,Easy,,,,,
+,,,S,D,L,M,1050,20,Easy,,,,,
+,,,S,D,M,L,1050,20,Easy,,,,,
+,,,S,D,L,L,1000,19,Easy,,,,,
+,,,D,S,H,H,300,18,Easy,,,,,
+,,,D,S,M,H,250,16,Easy,,,,,
+,,,D,S,H,M,250,16,Easy,,,,,
+,,,D,S,L,H,200,12,Easy,,,,,
+,,,D,S,M,M,200,12,Easy,,,,,
+,,,D,D,H,H,200,12,Easy,,,,,
+,,,D,S,H,L,200,12,Easy,,,,,
+,,,D,S,L,M,150,8,Medium,,,,,
+,,,D,D,M,H,150,8,Medium,,,,,
+,,,D,S,M,L,150,8,Medium,,,,,
+,,,D,D,H,M,150,8,Medium,,,,,
+,,,D,D,L,H,100,4,Medium,,,,,
+,,,D,S,L,L,100,4,Medium,,,,,
+,,,D,D,M,M,100,4,Medium,,,,,
+,,,D,D,H,L,100,4,Medium,,,,,
+,,,D,D,L,M,50,2,Hard,,,,,
+,,,D,D,M,L,50,2,Hard,,,,,
+,,,D,D,L,L,0,1,Hard,,,,,
