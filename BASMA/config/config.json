@@ -1,22 +1,22 @@
 {
   "files": {
     "input": {
-      "madar_lexicon": "MADAR_Lexicon_v1.0.tsv",
-      "msa_freq": "MSA_freq_lists.tsv",
-      "da_freq": "DA_freq_lists.tsv",
-      "transliteration": "MADAR_Lexicon_transliteration.tsv",
-      "roots": "roots.tsv"
+      "madar_lexicon": "data/input/MADAR_Lexicon_v1.0.tsv",
+      "msa_freq": "data/input/MSA_freq_lists.tsv",
+      "da_freq": "data/input/DA_freq_lists.tsv",
+      "transliteration": "data/input/MADAR_Lexicon_transliteration.tsv",
+      "roots": "data/input/roots.tsv"
     },
     "intermediate": {
-      "frequencies": "BASMA Plan - frequencies.csv",
-      "scores": "BASMA Plan - Scores.csv",
-      "scoring_table": "BASMA Plan - Temp (1).csv"
+      "frequencies": "data/intermediate/BASMA Plan - frequencies.csv",
+      "scores": "data/intermediate/BASMA Plan - Scores.csv",
+      "scoring_table": "data/intermediate/BASMA Plan - Temp (1).csv"
     },
     "output": {
-      "easiness": "BASMA Easiness by Word.csv",
-      "targets": "BASMA IDs with E-M-H.csv",
-      "targets_all_long": "BASMA IDs with All E-M-H (long).csv",
-      "targets_all_triplets": "BASMA IDs with All E-M-H (long, triplets only).csv"
+      "easiness": "data/output/BASMA Easiness by Word.csv",
+      "targets": "data/output/BASMA IDs with E-M-H.csv",
+      "targets_all_long": "data/output/BASMA IDs with All E-M-H (long).csv",
+      "targets_all_triplets": "data/output/BASMA IDs with All E-M-H (long, triplets only).csv"
     }
   },
   "mapping_thresholds": {
@@ -65,4 +65,3 @@
     }
   }
 }
-
