@@ -118,24 +118,22 @@ def split_roots_str(root_str):
         return []
     return [r.strip() for r in s.split("،") if r.strip()]
 
-#build mapping from root to set of dialects for a given concept
-root_concept_to_dialects = {}
+#build mapping from root to set of dialects across all concepts
+root_to_dialects = {}
 
 for _, row in df.dropna(subset=["Dialect"]).iterrows():
     dialect_label = row["Dialect"]
-    concept_key = (row["English"], row["French"], row["MSA"])
     for r in split_roots_str(row["Root"]):
-        key = (r, concept_key)
-        if key not in root_concept_to_dialects:
-            root_concept_to_dialects[key] = set()
-        root_concept_to_dialects[key].add(dialect_label)
+        if r not in root_to_dialects:
+            root_to_dialects[r] = set()
+        root_to_dialects[r].add(dialect_label)
 
-root_concept_dialects = pd.Series(
-    {key: ", ".join(sorted(dials)) for key, dials in root_concept_to_dialects.items()}
+root_dialects = pd.Series(
+    {root: ", ".join(sorted(dials)) for root, dials in root_to_dialects.items()}
 )
 
 #convert root dialects to regions and count
-root_concept_regions = root_concept_dialects.apply(dialects_to_regions)
+root_regions = root_dialects.apply(dialects_to_regions)
 
 #group rows into one entry per dialectal word
 group_cols = ["English", "French", "MSA", "POS", "CODA"]
@@ -153,16 +151,15 @@ combined = (
     .reset_index()
 )
 
-#DCom calculations: regions and counts for each dialect word within the same concept
+#DCom calculations: regions and counts for each dialect word
 regions = combined["Dialect"].apply(dialects_to_regions)
 combined["DCom_Regions"] = regions.apply(lambda x: x[0])
 combined["DCom"] = regions.apply(lambda x: x[1])
 
-#RCom calculations: regions and counts for each root within the same concept
+#RCom calculations: regions and counts for each root
 def compute_rcom(row):
     root_str = row["Root"]
     roots = split_roots_str(root_str)
-    concept_key = (row["English"], row["French"], row["MSA"])
 
     #if there is no root, fallback to DCom count and regions
     if not roots:
@@ -171,8 +168,7 @@ def compute_rcom(row):
     all_regions = []
     counts = []
     for r in roots:
-        key = (r, concept_key)
-        region_str, cnt = root_concept_regions.get(key, ("", 0))
+        region_str, cnt = root_regions.get(r, ("", 0))
         counts.append(cnt)
         if region_str:
             all_regions.extend(
@@ -189,7 +185,7 @@ combined[["RCom_Regions", "RCom"]] = combined.apply(
 
 combined["Root"] = combined["Root"].fillna("")
 
-#compute rounded log of frequencies for DFreq and MSAFreq
+#compute rounded of frequencies for DFreq and MSAFreq
 def log_round(series):
     s = series.fillna(0)
     return s.apply(lambda x: int(round(np.log10(x))) if x > 0 else 0)
