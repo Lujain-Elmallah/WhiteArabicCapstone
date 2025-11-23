@@ -179,8 +179,8 @@ def compute_rcom(row):
                 [rg.strip() for rg in region_str.split(",") if rg.strip()]
             )
     unique_regions_str = ", ".join(sorted(set(all_regions))) if all_regions else ""
-    avg_count = sum(counts) / len(counts) if counts else 0
-    return unique_regions_str, avg_count
+    max_count = max(counts) if counts else 0
+    return unique_regions_str, max_count
 
 combined[["RCom_Regions", "RCom"]] = combined.apply(
     lambda row: pd.Series(compute_rcom(row)),
