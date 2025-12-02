@@ -8,7 +8,7 @@ BASMA_ROOT = Path(__file__).parent.parent
 
 #helpers for normalization
 DIACRITICS = re.compile(r'[\u0617-\u061A\u064B-\u0652]')
-WEAK_LETTERS_PATTERN = re.compile(r"[اويىأةآأإؤئء]")
+WEAK_LETTERS_PATTERN = re.compile(r"[اويىأةٱآأإؤئء]")
 
 def undiatratize(text):
     return DIACRITICS.sub("", str(text)) if text is not None else ""
