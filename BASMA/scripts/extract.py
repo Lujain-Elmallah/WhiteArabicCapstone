@@ -122,22 +122,23 @@ def split_roots_str(root_str):
         return []
     return [r.strip() for r in s.split("،") if r.strip()]
 
-#build mapping from root to set of dialects across all concepts
-root_to_dialects = {}
+#build mapping from root+concept to dialects (RCom per concept)
+root_concept_to_dialects = {}
 
 for _, row in df.dropna(subset=["Dialect"]).iterrows():
     dialect_label = row["Dialect"]
+    concept_key = (row["English"], row["French"], row["MSA"])
     for r in split_roots_str(row["Root"]):
-        if r not in root_to_dialects:
-            root_to_dialects[r] = set()
-        root_to_dialects[r].add(dialect_label)
+        key = (r, concept_key)
+        if key not in root_concept_to_dialects:
+            root_concept_to_dialects[key] = set()
+        root_concept_to_dialects[key].add(dialect_label)
 
-root_dialects = pd.Series(
-    {root: ", ".join(sorted(dials)) for root, dials in root_to_dialects.items()}
+root_concept_dialects = pd.Series(
+    {key: ", ".join(sorted(dials)) for key, dials in root_concept_to_dialects.items()}
 )
 
-#convert root dialects to regions and count
-root_regions = root_dialects.apply(dialects_to_regions)
+root_concept_regions = root_concept_dialects.apply(dialects_to_regions)
 
 #group rows into one entry per dialectal word
 group_cols = ["English", "French", "MSA", "POS", "CODA"]
