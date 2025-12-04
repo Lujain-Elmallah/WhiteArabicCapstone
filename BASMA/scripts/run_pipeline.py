@@ -30,10 +30,7 @@ def load_config(config_path: Path) -> dict:
 
 def run_script(script_name: str, config: dict, verbose: bool = True) -> bool:
     """Run a Python script and return success status."""
-    # Scripts are in scripts/ directory, run from BASMA root
-    scripts_dir = Path(__file__).parent
-    script_path = scripts_dir / script_name
-    basma_root = scripts_dir.parent  # BASMA directory
+    script_path = Path(__file__).parent / script_name
     
     if not script_path.exists():
         print(f"ERROR: Script not found: {script_path}")
@@ -47,7 +44,7 @@ def run_script(script_name: str, config: dict, verbose: bool = True) -> bool:
     try:
         result = subprocess.run(
             [sys.executable, str(script_path)],
-            cwd=basma_root,  # Run from BASMA root so paths resolve correctly
+            cwd=script_path.parent,
             check=True,
             capture_output=not verbose,
             text=True
@@ -86,12 +83,8 @@ def main():
     
     args = parser.parse_args()
     
-    # Load config (default to config/config.json in BASMA directory)
-    basma_root = Path(__file__).parent.parent
-    if args.config == 'config.json':
-        config_path = basma_root / 'config' / 'config.json'
-    else:
-        config_path = Path(args.config)
+    # Load config
+    config_path = Path(__file__).parent / args.config
     try:
         config = load_config(config_path)
         print(f"Loaded configuration from: {config_path}")

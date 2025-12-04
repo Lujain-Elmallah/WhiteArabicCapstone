@@ -1,10 +1,6 @@
 import pandas as pd
 import numpy as np
 import re
-from pathlib import Path
-
-# Get BASMA root directory (one level up from scripts/)
-BASMA_ROOT = Path(__file__).parent.parent
 
 #helpers for normalization
 DIACRITICS = re.compile(r'[\u0617-\u061A\u064B-\u0652]')
@@ -29,13 +25,13 @@ def extract_pos(tag):
     return parts[-1]
 
 #load MADAR lexicon
-df = pd.read_csv(BASMA_ROOT / "data/input/MADAR_Lexicon_v1.0.tsv", sep="\t")
+df = pd.read_csv("MADAR_Lexicon_v1.0.tsv", sep="\t")
 columns = ["English", "French", "MSA", "Dialect", "CODA", "MSA_lemma_POS"]
 df = df[columns]
 df["POS"] = df["MSA_lemma_POS"].apply(extract_pos)
 
 #compute MSA frequency
-msa_freq = pd.read_csv(BASMA_ROOT / "data/input/MSA_freq_lists.tsv", sep="\t", header=None, names=["Word", "Frequency"])
+msa_freq = pd.read_csv("MSA_freq_lists.tsv", sep="\t", header=None, names=["Word", "Frequency"])
 msa_freq["Word"] = msa_freq["Word"].apply(undiatratize).str.strip()
 msa_dict = dict(zip(msa_freq["Word"], msa_freq["Frequency"]))
 
@@ -46,7 +42,7 @@ def get_msa_freq(text):
 df["MSA_Frequency"] = df["MSA"].apply(get_msa_freq)
 
 #compute dialect frequency
-da_freq = pd.read_csv(BASMA_ROOT / "data/input/DA_freq_lists.tsv", sep="\t", header=None, names=["Word", "Frequency"])
+da_freq = pd.read_csv("DA_freq_lists.tsv", sep="\t", header=None, names=["Word", "Frequency"])
 da_freq["Word"] = da_freq["Word"].str.strip()
 da_freq["Frequency"] = pd.to_numeric(da_freq["Frequency"], errors="coerce")
 da_dict = dict(zip(da_freq["Word"], da_freq["Frequency"]))
@@ -82,7 +78,7 @@ def dialects_to_regions(text):
     return ", ".join(regions), len(regions)
 
 #load transliteration file
-translit_df = pd.read_csv(BASMA_ROOT / "data/input/MADAR_Lexicon_transliteration.tsv", sep="\t")
+translit_df = pd.read_csv("MADAR_Lexicon_transliteration.tsv", sep="\t")
 translit_df.columns = [c.strip() for c in translit_df.columns]
 
 def split_translit(text):
@@ -104,7 +100,7 @@ def compute_fsim(row):
 df["FSim"] = df.apply(compute_fsim, axis=1)
 
 #load roots file
-roots_df = pd.read_csv(BASMA_ROOT / "data/input/roots.tsv", sep="\t")
+roots_df = pd.read_csv("roots.tsv", sep="\t")
 
 roots_df["dia_word"] = roots_df["dia_word"].astype(str).str.strip()
 roots_df["cleaned_dia_root"] = roots_df["cleaned_dia_root"].str.strip()
@@ -212,6 +208,6 @@ final_columns = [
 ]
 
 combined = combined[final_columns]
-combined.to_excel(BASMA_ROOT / "data/input/MADAR_Lexicon_freq.xlsx", index=False)
+combined.to_excel("MADAR_Lexicon_freq.xlsx", index=False)
 
 print("done :)")

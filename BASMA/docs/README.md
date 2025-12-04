@@ -13,26 +13,6 @@ This pipeline computes easiness scores for dialectal words using a 5-factor scor
 
 Words are categorized as **Easy**, **Medium**, or **Hard** based on their easiness scores.
 
-## Directory Structure
-
-```
-BASMA/
-├── scripts/              # Python scripts
-│   ├── extract.py       # Feature extraction
-│   ├── compute_easiness.py
-│   ├── select_targets.py
-│   ├── select_targets_all.py
-│   └── run_pipeline.py  # Main pipeline runner
-├── config/              # Configuration files
-│   └── config.json      # Main configuration
-├── data/
-│   ├── input/           # Input data files (TSV, XLSX)
-│   ├── intermediate/     # Intermediate processing files
-│   └── output/          # Final output files (CSV)
-└── docs/                # Documentation
-    └── README.md        # This file
-```
-
 ## Pipeline Steps
 
 1. **extract.py** - Extract features from MADAR lexicon (frequencies, similarities, regions, roots)
@@ -44,37 +24,35 @@ BASMA/
 
 ### Run the complete pipeline:
 
-From the BASMA directory:
 ```bash
-cd BASMA
-python scripts/run_pipeline.py
+python run_pipeline.py
 ```
 
 ### Run individual steps:
 
 ```bash
 # Step 1: Extract features
-python scripts/extract.py
+python extract.py
 
 # Step 2: Compute easiness scores
-python scripts/compute_easiness.py
+python compute_easiness.py
 
 # Step 3: Select best words per concept
-python scripts/select_targets.py
+python select_targets.py
 
 # Step 4: Generate long-form files
-python scripts/select_targets_all.py
+python select_targets_all.py
 ```
 
 ### Skip extraction (use existing intermediate files):
 
 ```bash
-python scripts/run_pipeline.py --skip-extract
+python run_pipeline.py --skip-extract
 ```
 
 ## Configuration
 
-All parameters are configurable via `config/config.json`. Key parameters:
+All parameters are configurable via `config.json`. Key parameters:
 
 ### Mapping Thresholds
 
@@ -110,32 +88,80 @@ Control how easiness scores map to categories:
 
 ### File Paths
 
-All input/output file paths are configurable in `config/config.json`. Paths are relative to the BASMA directory.
+All input/output file paths are configurable:
+
+```json
+"files": {
+  "input": {
+    "madar_lexicon": "MADAR_Lexicon_v1.0.tsv",
+    "msa_freq": "MSA_freq_lists.tsv",
+    "da_freq": "DA_freq_lists.tsv",
+    "transliteration": "MADAR_Lexicon_transliteration.tsv",
+    "roots": "roots.tsv"
+  },
+  "intermediate": {
+    "frequencies": "BASMA Plan - frequencies.csv",
+    "scores": "BASMA Plan - Scores.csv",
+    "scoring_table": "BASMA Plan - Temp (1).csv"
+  },
+  "output": {
+    "easiness": "BASMA Easiness by Word.csv",
+    "targets": "BASMA IDs with E-M-H.csv",
+    "targets_all_long": "BASMA IDs with All E-M-H (long).csv",
+    "targets_all_triplets": "BASMA IDs with All E-M-H (long, triplets only).csv"
+  }
+}
+```
+
+### Scoring Table Configuration
+
+Configure how the scoring table CSV is parsed:
+
+```json
+"scoring_table": {
+  "header_row": 13,        // Row number (1-indexed) where headers are
+  "data_start_row": 14,    // Row number (1-indexed) where data starts
+  "columns": {
+    "asim": 3,
+    "fsim": 4,
+    "dfreq": 5,
+    "dcom": 6,
+    "rcom": 7,
+    "score": 8,
+    "category": 10
+  }
+}
+```
 
 ## Output Files
 
-All output files are written to `data/output/`:
+### BASMA Easiness by Word.csv
+Complete easiness scores for all words with all computed features.
 
-- **BASMA Easiness by Word.csv** - Complete easiness scores for all words with all computed features
-- **BASMA IDs with E-M-H.csv** - One row per concept ID with the best Easy, Medium, and Hard word selected
-- **BASMA IDs with All E-M-H (long).csv** - All words from all concepts, organized by category
-- **BASMA IDs with All E-M-H (long, triplets only).csv** - All words from concepts that have all three categories (Easy, Medium, Hard)
+### BASMA IDs with E-M-H.csv
+One row per concept ID with the best Easy, Medium, and Hard word selected.
+
+### BASMA IDs with All E-M-H (long).csv
+All words from all concepts, organized by category.
+
+### BASMA IDs with All E-M-H (long, triplets only).csv
+All words from concepts that have all three categories (Easy, Medium, Hard).
 
 ## Customizing Parameters
 
 To adjust the easiness scoring:
 
-1. **Modify thresholds in config/config.json**:
+1. **Modify thresholds in config.json**:
    - Change `mapping_thresholds` to adjust L/M/H boundaries
    - Change `category_thresholds` to adjust Easy/Medium/Hard boundaries
 
 2. **Update the scoring table**:
-   - Modify `data/intermediate/BASMA Plan - Temp (1).csv` to change scores for specific factor combinations
+   - Modify `BASMA Plan - Temp (1).csv` to change scores for specific factor combinations
    - Update `scoring_table` config if the CSV structure changes
 
 3. **Run the pipeline**:
    ```bash
-   python scripts/run_pipeline.py
+   python run_pipeline.py
    ```
 
 ## Requirements
@@ -143,17 +169,35 @@ To adjust the easiness scoring:
 - Python 3.7+
 - pandas
 - numpy
-- openpyxl (for Excel file support)
 
 Install dependencies:
 ```bash
-pip install pandas numpy openpyxl
+pip install pandas numpy
+```
+
+## File Structure
+
+```
+BASMA/
+├── config.json                    # Configuration file
+├── run_pipeline.py                # Main pipeline script
+├── extract.py                     # Feature extraction
+├── compute_easiness.py            # Easiness computation
+├── select_targets.py              # Best word selection
+├── select_targets_all.py           # Long-form file generation
+├── README.md                      # This file
+├── MADAR_Lexicon_v1.0.tsv         # Input: MADAR lexicon
+├── MSA_freq_lists.tsv             # Input: MSA frequencies
+├── DA_freq_lists.tsv              # Input: Dialect frequencies
+├── MADAR_Lexicon_transliteration.tsv  # Input: Transliterations
+├── roots.tsv                      # Input: Root mappings
+└── BASMA Plan - Temp (1).csv      # Input: Scoring table
 ```
 
 ## Notes
 
-- The pipeline is designed to be reproducible: all parameters are in `config/config.json`
+- The pipeline is designed to be reproducible: all parameters are in `config.json`
 - Intermediate files can be reused by using `--skip-extract`
-- All scripts accept `--config` to specify a custom config file path
-- Paths in config are relative to the BASMA directory
-- Scripts automatically resolve paths relative to the BASMA root directory
+- All scripts accept `--config` to specify a custom config file
+- Paths in config are relative to the script directory
+

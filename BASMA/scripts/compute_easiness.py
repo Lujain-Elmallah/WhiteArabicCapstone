@@ -6,8 +6,8 @@ import argparse
 from pathlib import Path
 from typing import Dict, Tuple
 
-# Default config path (BASMA directory, one level up from scripts/)
-DEFAULT_CONFIG = Path(__file__).parent.parent / 'config' / 'config.json'
+# Default config path
+DEFAULT_CONFIG = Path(__file__).parent / 'config.json'
 
 
 def load_config(config_path: Path) -> dict:
@@ -182,8 +182,8 @@ def main():
     config_path = Path(args.config)
     config = load_config(config_path)
     
-    # Get file paths from config (BASMA directory, one level up from scripts/)
-    root = Path(__file__).parent.parent
+    # Get file paths from config
+    root = Path(__file__).parent
     files = config['files']
     scores_csv = root / files['intermediate']['scores']
     frequencies_csv = root / files['intermediate']['frequencies']

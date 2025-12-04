@@ -6,7 +6,7 @@ import argparse
 from pathlib import Path
 from typing import Dict, List, Set
 
-DEFAULT_CONFIG = Path(__file__).parent.parent / 'config' / 'config.json'
+DEFAULT_CONFIG = Path(__file__).parent / 'config.json'
 
 CATEGORIES = {'Easy', 'Medium', 'Hard'}
 
@@ -29,8 +29,8 @@ def main():
     # Load config
     config = load_config(Path(args.config))
     
-    # Get file paths from config (BASMA directory, one level up from scripts/)
-    root = Path(__file__).parent.parent
+    # Get file paths from config
+    root = Path(__file__).parent
     easiness_csv = root / config['files']['output']['easiness']
     output_all = root / config['files']['output']['targets_all_long']
     output_triplet = root / config['files']['output']['targets_all_triplets']
