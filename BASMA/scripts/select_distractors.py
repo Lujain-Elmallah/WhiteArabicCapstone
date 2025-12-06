@@ -24,9 +24,9 @@ from pathlib import Path
 from typing import Dict, List, Tuple
 
 ROOT = Path(__file__).resolve().parent.parent
-GROUPED_CSV = ROOT / "BASMA Plan - Concepts Grouped.csv"
-RANDOM_SELECT_CSV = ROOT / "BASMA Plan - Random Select.csv"
-OUTPUT_CSV = ROOT / "BASMA Plan - Random Select with Distractors.csv"
+GROUPED_CSV = ROOT / "data" / "output" / "BASMA Plan - Concepts Grouped.csv"
+RANDOM_SELECT_CSV = ROOT / "data" / "output" / "BASMA Plan - Random Select.csv"
+OUTPUT_CSV = ROOT / "data" / "output" / "BASMA Plan - Random Select with Distractors.csv"
 
 # Use a fixed seed for reproducibility
 random.seed(42)

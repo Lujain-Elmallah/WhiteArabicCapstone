@@ -19,10 +19,10 @@ from collections import defaultdict
 from typing import Dict, List, Tuple
 
 ROOT = Path(__file__).resolve().parent.parent
-RANDOM_SELECT_CSV = ROOT / "BASMA Plan - Random Select.csv"
-ALL_WORDS_CSV = ROOT / "BASMA Plan - all_words.csv"
-CONCEPTS_GROUPED_CSV = ROOT / "BASMA Plan - Concepts Grouped.csv"
-OUTPUT_CSV = ROOT / "BASMA Plan - Random Select with Edit Distance Distractors.csv"
+RANDOM_SELECT_CSV = ROOT / "data" / "output" / "BASMA Plan - Random Select.csv"
+ALL_WORDS_CSV = ROOT / "data" / "output" / "BASMA Plan - all_words.csv"
+CONCEPTS_GROUPED_CSV = ROOT / "data" / "output" / "BASMA Plan - Concepts Grouped.csv"
+OUTPUT_CSV = ROOT / "data" / "output" / "BASMA Plan - Random Select with Edit Distance Distractors.csv"
 
 # Use a fixed seed for reproducibility
 random.seed(42)
